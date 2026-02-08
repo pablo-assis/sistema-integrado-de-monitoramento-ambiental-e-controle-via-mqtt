@@ -4,7 +4,7 @@ Projeto embarcado com Raspberry Pi Pico W (RP2040), FreeRTOS, sensores BMP280 (t
 
 ## Visão Geral
 - Sensores: BMP280 (I2C0), VL53L0X/VL53L1X (I2C1)
-- Display: SSD1306 (I2C1)
+- Display: SSD1306 (I2C1), exibe FRIO/QUENTE em tela cheia conforme `TEMP_THRESHOLD_C`
 - IoT: Wi‑Fi (CYW43) + lwIP + MQTT
 - Tarefas: `tarefaSensorBMP280` (aquisição/visualização) e `tarefaMQTT` (rede/MQTT)
 - Fila: `filaMQTT` com estrutura `DadosSensor { temp_c, press_pa, dist_mm }`
@@ -63,9 +63,12 @@ mosquitto_sub -h test.mosquitto.org -t pico_w/sensor
 mosquitto_pub -h test.mosquitto.org -t pico_w/recv -m "acender"
 ```
 
+## Exibição e Sinalização
+- Display SSD1306: renderiza a palavra **QUENTE** ou **FRIO** em fonte escalada e centralizada.
+- LED RGB: QUENTE ativa vermelho (`LED_PIN_R`), FRIO ativa azul (`LED_PIN_B`).
+ 
 ## Segurança
 - Credenciais (SSID/senha) e limiares ficam em `.env` e **não** são versionados.
-- Recomenda‑se adotar TLS futuramente (`MQTT_TLS=1`) e watchdogs.
 
 ## Estrutura do Projeto (resumo)
 - Raiz:
@@ -94,7 +97,4 @@ git push -u origin main
 ```
 Se for solicitado, autentique via Git Credential Manager (HTTPS) ou use um Token (PAT).
 
-## Próximos Passos
-- Habilitar TLS para MQTT
-- Adicionar testes automatizados e watchdog
-- Expandir visualização no display
+ 

@@ -141,9 +141,13 @@ void pinos_start()
     gpio_set_function(LED_PIN_G, GPIO_FUNC_PWM);
     gpio_set_function(LED_PIN_R, GPIO_FUNC_PWM);
 
-    uint slice_num = pwm_gpio_to_slice_num(LED_PIN_B);
     pwm_config config = pwm_get_default_config();
-    pwm_init(slice_num, &config, true);
+    uint slice_b = pwm_gpio_to_slice_num(LED_PIN_B);
+    uint slice_g = pwm_gpio_to_slice_num(LED_PIN_G);
+    uint slice_r = pwm_gpio_to_slice_num(LED_PIN_R);
+    pwm_init(slice_b, &config, true);
+    pwm_init(slice_g, &config, true);
+    pwm_init(slice_r, &config, true);
 }
 
 void pwm_led(uint gpio_pin, uint brilho)
@@ -587,13 +591,30 @@ void tarefaSensorBMP280(void *pvParameters)
 
         ssd1306_clear();
 
-        if (dados.temperatura >= (float)TEMP_THRESHOLD_C)
-        {
-            ssd1306_draw_bitmap(9, 0, epd_bitmap_fogo, 110, 110, true);
-        }
-        else
-        {
-            ssd1306_draw_bitmap(9, 0, epd_bitmap_gelo, 110, 110, true);
+        const char *word = (dados.temperatura >= (float)TEMP_THRESHOLD_C) ? "QUENTE" : "FRIO";
+        int len = (int)strlen(word);
+        // Calcula escala máxima que cabe na largura e altura
+        int max_scale_w = 128 / (len * 6);
+        int max_scale_h = 64 / 7;
+        int scale = max_scale_w;
+        if (scale > max_scale_h) scale = max_scale_h;
+        if (scale < 1) scale = 1;
+        int text_w = len * 6 * scale;
+        int text_h = 7 * scale;
+        int x0 = (128 - text_w) / 2;
+        int y0 = (64 - text_h) / 2;
+
+        ssd1306_draw_text_scaled(x0, y0, word, scale, true);
+
+        // LED cores: quente=vermelho, frio=azul
+        if (dados.temperatura >= (float)TEMP_THRESHOLD_C) {
+            pwm_led(LED_PIN_R, 3000);
+            pwm_led(LED_PIN_G, 0);
+            pwm_led(LED_PIN_B, 0);
+        } else {
+            pwm_led(LED_PIN_R, 0);
+            pwm_led(LED_PIN_G, 0);
+            pwm_led(LED_PIN_B, 3000);
         }
 
         ssd1306_update();
