@@ -39,9 +39,9 @@ DIST_THRESHOLD_MM=200
 - O `.env` está ignorado pelo Git (veja [.gitignore](.gitignore)).
 
 ### Atalho: copiar modelo para `.env`
-Se existir um arquivo de exemplo (por exemplo, `.env.exempla`), você pode copiá-lo rapidamente para `.env` no PowerShell:
+Se existir um arquivo de exemplo (por exemplo, `.env.example`), você pode copiá-lo rapidamente para `.env` no PowerShell:
 ```powershell
-Copy-Item .env.exempla .env
+Copy-Item .env.example .env
 ```
 
 Depois da cópia, abra o arquivo `.env` e substitua as variáveis de rede pelos seus valores reais:
