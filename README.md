@@ -51,6 +51,32 @@ Alternativamente, via terminal (se desejado):
 # cmake --build build
 ```
 
+## Limpar e reconstruir o build
+Quando o build quebrar ou você mudar configurações, faça uma recompilação limpa.
+
+Opção 1 — VS Code (recomendado):
+- Feche qualquer tarefa de build em execução.
+- Exclua a pasta `build/`.
+- Rode a tarefa "Compile Project" novamente (ela recria `build/` e compila).
+
+Opção 2 — Terminal (PowerShell):
+```powershell
+# Na raiz do projeto
+# Apagar completamente a pasta de build
+Remove-Item -Recurse -Force build
+
+# Regenerar e compilar (exemplo genérico)
+cmake -S . -B build
+cmake --build build
+
+# Alternativa com Ninja (se preferir)
+# cmake -S . -B build -G "Ninja"
+# ninja -C build
+```
+Notas:
+- `build/` já está ignorado pelo Git via [.gitignore](.gitignore).
+- Se tarefas como "Run Project"/"Flash" usarem arquivos de `build/`, execute o rebuild antes de usá-las.
+
 ## MQTT
 - Publicação: tópico `pico_w/sensor` com payload JSON, exemplo:
 ```json
@@ -96,5 +122,4 @@ mosquitto_pub -h test.mosquitto.org -t pico_w/recv -m "acender"
 git push -u origin main
 ```
 Se for solicitado, autentique via Git Credential Manager (HTTPS) ou use um Token (PAT).
-
  
