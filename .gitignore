@@ -1,0 +1,55 @@
+# Build artifacts
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+*.ninja
+rules.ninja
+
+# Object and binary files
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.so
+*.dylib
+*.exe
+*.bin
+*.hex
+*.elf
+*.map
+*.uf2
+*.dis
+
+# Logs and intermediate
+*.log
+*.tmp
+*.temp
+*.cache
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Python/Node/etc (if any)
+__pycache__/
+node_modules/
+
+# Secrets and environment
+.env
+.env.local
+.env.*.local
+
+# Generated docs/images (keep if you add manually)
+docs/images/*.tmp
+
+# Misc
+*.swp
+*.swo
