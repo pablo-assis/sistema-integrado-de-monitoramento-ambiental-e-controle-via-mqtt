@@ -38,6 +38,34 @@ DIST_THRESHOLD_MM=200
 - O `.env` é lido no `CMakeLists.txt` para definir macros usadas no firmware.
 - O `.env` está ignorado pelo Git (veja [.gitignore](.gitignore)).
 
+### Atualizando `.env`
+- O arquivo [CMakeLists.txt](CMakeLists.txt) está configurado para monitorar `.env` e reconfigurar automaticamente o CMake quando você recompila. Em builds incrementais, basta rodar a tarefa "Compile Project" e as mudanças de `.env` entram.
+- Se você apagou a pasta `build/`, é necessário configurar novamente antes de compilar. Use:
+```powershell
+cmake -S . -B build -G "Ninja"
+cmake --build build
+```
+- Caso perceba que os logs ainda não refletiram o novo `.env`, force uma reconfiguração: apague `build/` e gere/compile novamente com os comandos acima.
+
+### Como o `.env` é aplicado (por que não “puxa” em tempo de execução)
+- O `.env` é lido em tempo de configuração do CMake (quando os arquivos de build são gerados). Os valores viram definições de pré‑processador (`WIFI_SSID`, `WIFI_PASSWORD`, `TEMP_THRESHOLD_C`, `DIST_THRESHOLD_MM`) embutidas no binário.
+- Por isso, alterar `.env` não muda o comportamento “ao vivo”; é necessário reconfigurar e recompilar para que o novo binário inclua os valores atualizados.
+- Em builds incrementais, o projeto monitora `.env` e reconfigura automaticamente quando você executa "Compile Project" com a pasta `build/` existente.
+- Se `build/` foi removida, primeiro configure (CMake) e só então compile; a task "Compile Project" por si só pode falhar se não houver a configuração inicial.
+
+### Fluxo recomendado
+- Editar `.env`.
+- Se `build/` existe: executar a task "Compile Project" e depois "Run Project".
+- Se `build/` não existe ou algo não atualizou: executar no terminal
+```powershell
+cmake -S . -B build -G "Ninja"
+cmake --build build
+```
+e então usar a task "Run Project" para carregar o binário.
+
+### Observação sobre `TEMP_THRESHOLD_C`
+- O regex de leitura no [CMakeLists.txt](CMakeLists.txt) foi ajustado para evitar capturar comentários acidentalmente. Se `TEMP_THRESHOLD_C` não aparecer nos logs, reconfigure e compile novamente.
+
 ### Atalho: copiar modelo para `.env`
 Se existir um arquivo de exemplo (por exemplo, `.env.example`), você pode copiá-lo rapidamente para `.env` no PowerShell:
 ```powershell
@@ -71,7 +99,11 @@ Quando o build quebrar ou você mudar configurações, faça uma recompilação 
 Opção 1 — VS Code (recomendado):
 - Feche qualquer tarefa de build em execução.
 - Exclua a pasta `build/`.
-- Rode a tarefa "Compile Project" novamente (ela recria `build/` e compila).
+- Em seguida, gere os arquivos de build e compile. Você pode usar o menu/atalho do CMake (Configure) ou executar no terminal:
+```powershell
+cmake -S . -B build -G "Ninja"
+cmake --build build
+```
 
 Opção 2 — Terminal (PowerShell):
 ```powershell

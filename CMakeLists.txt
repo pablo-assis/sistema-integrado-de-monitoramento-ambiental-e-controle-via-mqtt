@@ -89,7 +89,7 @@ if(EXISTS "${ENV_FILE}")
     endif()
 
     # Extrai TEMP_THRESHOLD_C=... (valor numérico em Celsius)
-    string(REGEX MATCH "TEMP_THRESHOLD_C[ \t]*=([^\\r\\n]*)" _tth_line "${ENV_CONTENT}")
+    string(REGEX MATCH "TEMP_THRESHOLD_C[ \t]*=([^\r\n]*)" _tth_line "${ENV_CONTENT}")
     if(CMAKE_MATCH_1)
         string(STRIP "${CMAKE_MATCH_1}" TEMP_THRESHOLD_C)
     endif()
