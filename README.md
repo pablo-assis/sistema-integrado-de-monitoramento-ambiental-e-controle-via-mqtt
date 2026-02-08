@@ -38,6 +38,20 @@ DIST_THRESHOLD_MM=200
 - O `.env` é lido no `CMakeLists.txt` para definir macros usadas no firmware.
 - O `.env` está ignorado pelo Git (veja [.gitignore](.gitignore)).
 
+### Atalho: copiar modelo para `.env`
+Se existir um arquivo de exemplo (por exemplo, `.env.exempla`), você pode copiá-lo rapidamente para `.env` no PowerShell:
+```powershell
+Copy-Item .env.exempla .env
+```
+
+Depois da cópia, abra o arquivo `.env` e substitua as variáveis de rede pelos seus valores reais:
+- `WIFI_SSID`: o nome (SSID) da sua rede Wi‑Fi.
+- `WIFI_PASSWORD`: a senha da sua rede Wi‑Fi.
+
+Opcionalmente, ajuste os limiares conforme necessário:
+- `TEMP_THRESHOLD_C`: temperatura em °C para trocar a imagem do display.
+- `DIST_THRESHOLD_MM`: distância em milímetros para acionar lógica associada.
+
 ## Build e Execução (VS Code Tasks)
 - Compilar: tarefa "Compile Project"
 - Carregar UF2/ELF: tarefa "Run Project"
